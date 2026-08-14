@@ -1,8 +1,8 @@
-name: Sync with External Repository
+name: Sync MAVLink XML Definitions
 
 on:
   schedule:
-    # Перевірка щогодини (можете змінити на свій розсуд)
+    # Запуск кожні 5 хвилин
     - cron: '*/5 * * * *'
   workflow_dispatch:
 
@@ -10,10 +10,24 @@ permissions:
   contents: write
 
 jobs:
-  check-and-update:
+  sync:
     runs-on: ubuntu-latest
+
     steps:
-      - name: 1. Get latest commit from external repo
-        id: check_commit
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run sync script
+        env:
+          # Встановлюємо змінну для push через GitHub token
+          GITLAB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CI_PROJECT_PATH: ${{ github.repository }}
+          CI_COMMIT_BRANCH: ${{ github.ref_name }}
         run: |
-          date
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          chmod +x ./sync_message_definitions.sh
+          ./sync_message_definitions.sh
