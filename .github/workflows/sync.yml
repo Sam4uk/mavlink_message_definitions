@@ -2,8 +2,7 @@ name: Sync MAVLink XML Definitions
 
 on:
   schedule:
-    # Запуск кожні 5 хвилин
-    - cron: '*/5 * * * *'
+    - cron: '0 0 * * *'
   workflow_dispatch:
 
 permissions:
