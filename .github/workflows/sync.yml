@@ -1,0 +1,19 @@
+name: Sync with External Repository
+
+on:
+  schedule:
+    # Перевірка щогодини (можете змінити на свій розсуд)
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  check-and-update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 1. Get latest commit from external repo
+        id: check_commit
+        run: |
+          date
